@@ -1,0 +1,14 @@
+c:\users\mariusz\documents\visual studio 2015\Projects\IrisFilter_kobotake\IrisFilter_kobotake\bin\Debug\IrisFilter_kobotake.exe.config
+C:\Users\Mariusz\Documents\Visual Studio 2015\Projects\IrisFilter_kobotake\IrisFilter_kobotake\bin\Debug\IrisFilter_kobotake.exe
+C:\Users\Mariusz\Documents\Visual Studio 2015\Projects\IrisFilter_kobotake\IrisFilter_kobotake\bin\Debug\IrisFilter_kobotake.pdb
+C:\Users\Mariusz\Documents\Visual Studio 2015\Projects\IrisFilter_kobotake\IrisFilter_kobotake\obj\Debug\IrisFilter_kobotake.csprojResolveAssemblyReference.cache
+C:\Users\Mariusz\Documents\Visual Studio 2015\Projects\IrisFilter_kobotake\IrisFilter_kobotake\obj\Debug\MainWindow.g.cs
+C:\Users\Mariusz\Documents\Visual Studio 2015\Projects\IrisFilter_kobotake\IrisFilter_kobotake\obj\Debug\App.g.cs
+C:\Users\Mariusz\Documents\Visual Studio 2015\Projects\IrisFilter_kobotake\IrisFilter_kobotake\obj\Debug\IrisFilter_kobotake_MarkupCompile.cache
+C:\Users\Mariusz\Documents\Visual Studio 2015\Projects\IrisFilter_kobotake\IrisFilter_kobotake\obj\Debug\IrisFilter_kobotake_MarkupCompile.lref
+C:\Users\Mariusz\Documents\Visual Studio 2015\Projects\IrisFilter_kobotake\IrisFilter_kobotake\obj\Debug\MainWindow.baml
+C:\Users\Mariusz\Documents\Visual Studio 2015\Projects\IrisFilter_kobotake\IrisFilter_kobotake\obj\Debug\IrisFilter_kobotake.g.resources
+C:\Users\Mariusz\Documents\Visual Studio 2015\Projects\IrisFilter_kobotake\IrisFilter_kobotake\obj\Debug\IrisFilter_kobotake.Properties.Resources.resources
+C:\Users\Mariusz\Documents\Visual Studio 2015\Projects\IrisFilter_kobotake\IrisFilter_kobotake\obj\Debug\IrisFilter_kobotake.csproj.GenerateResource.Cache
+C:\Users\Mariusz\Documents\Visual Studio 2015\Projects\IrisFilter_kobotake\IrisFilter_kobotake\obj\Debug\IrisFilter_kobotake.exe
+C:\Users\Mariusz\Documents\Visual Studio 2015\Projects\IrisFilter_kobotake\IrisFilter_kobotake\obj\Debug\IrisFilter_kobotake.pdb
