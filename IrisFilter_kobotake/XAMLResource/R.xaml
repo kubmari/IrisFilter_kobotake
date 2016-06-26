@@ -1,5 +1,8 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:IrisFilter_kobotake">
-                    <Label x:Key="srName" Content ="Output Text"/>
+                    <Label x:Key="srName" Content ="Output Console"/>
+                    <Button x:Key="srButtonLoadFiles" Content ="Load Files"/>
+                    <Button x:Key="srButtonCalculate" Content ="Calculate"/>
+                    <Button x:Key="srButtonEjectFiles" Content ="Eject Files"/>
 </ResourceDictionary>

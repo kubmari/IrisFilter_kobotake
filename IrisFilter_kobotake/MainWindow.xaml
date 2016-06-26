@@ -5,18 +5,19 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:IrisFilter_kobotake"
         mc:Ignorable="d"
-        Title="MainWindow" Height="538.868" Width="447.075">
+        Title="MainWindow" Height="600" Width="1024">
     <Grid Margin="0,0,0,0">
-        <Canvas HorizontalAlignment="Left" Height="299" Margin="10,43,0,0" VerticalAlignment="Top" Width="333"
-                x:Name="canvas"
+        <Canvas HorizontalAlignment="Left" Height="410" Margin="455,10,0,0" VerticalAlignment="Top" Width="551"
+                x:Name="maincanvas"
                 Drop="canvas_Drop"
                 AllowDrop="True"
-                Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"/>
-        <TextBox x:Name="textConsole" HorizontalAlignment="Left" Height="120" Margin="10,378,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="419"/>
-        <Label x:Name="label" Content="{StaticResource srName}" HorizontalAlignment="Left" Margin="10,347,0,0" VerticalAlignment="Top"/>
-        <Button x:Name="button_LoadFiles" Content="Load Files" HorizontalAlignment="Left" Margin="354,43,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="0.972,2.708" Click="button_LoadFiles_Click"/>
-        <Button x:Name="button_Calculate" Content="Calculate" HorizontalAlignment="Left" Margin="354,353,0,0" VerticalAlignment="Top" Width="75" Click="button_Calculate_Click"/>
-        <Button x:Name="button" Content="Eject Images" HorizontalAlignment="Left" Margin="354,322,0,0" VerticalAlignment="Top" Width="75"/>
+                Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
+            <Image x:Name="mainimage" HorizontalAlignment="Left" Height="311" VerticalAlignment="Top" Width="319" RenderTransformOrigin="0.495,0.485" Canvas.Left="10" Canvas.Top="10"/>
+        </Canvas>
+        <TextBox x:Name="textConsole" HorizontalAlignment="Left" Height="86" Margin="455,473,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="551"/>
+        <Label x:Name="label" Content="{StaticResource srName}" HorizontalAlignment="Left" Margin="455,435,0,0" VerticalAlignment="Top" Height="38" RenderTransformOrigin="0.5,0.5" HorizontalContentAlignment="Left" Padding="0 5 5 5" Width="106"/>
+        <Button x:Name="button_LoadFiles" Content="{StaticResource srButtonLoadFiles}" HorizontalAlignment="Left" Margin="354,43,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="0.972,2.708" Click="button_LoadFiles_Click"/>
+        <Button x:Name="button_Calculate" Content="{StaticResource srButtonCalculate}" HorizontalAlignment="Left" Margin="354,353,0,0" VerticalAlignment="Top" Width="75" Click="button_Calculate_Click"/>
 
     </Grid>
 </Window>
