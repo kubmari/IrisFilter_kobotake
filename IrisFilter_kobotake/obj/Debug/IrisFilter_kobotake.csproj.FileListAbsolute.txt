@@ -12,3 +12,5 @@ C:\Users\Mariusz\Documents\Visual Studio 2015\Projects\IrisFilter_kobotake\IrisF
 C:\Users\Mariusz\Documents\Visual Studio 2015\Projects\IrisFilter_kobotake\IrisFilter_kobotake\obj\Debug\IrisFilter_kobotake.csproj.GenerateResource.Cache
 C:\Users\Mariusz\Documents\Visual Studio 2015\Projects\IrisFilter_kobotake\IrisFilter_kobotake\obj\Debug\IrisFilter_kobotake.exe
 C:\Users\Mariusz\Documents\Visual Studio 2015\Projects\IrisFilter_kobotake\IrisFilter_kobotake\obj\Debug\IrisFilter_kobotake.pdb
+C:\Users\Mariusz\Documents\Visual Studio 2015\Projects\IrisFilter_kobotake\IrisFilter_kobotake\obj\Debug\App.baml
+C:\Users\Mariusz\Documents\Visual Studio 2015\Projects\IrisFilter_kobotake\IrisFilter_kobotake\obj\Debug\XAMLResource\R.baml

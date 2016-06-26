@@ -13,7 +13,7 @@
                 AllowDrop="True"
                 Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"/>
         <TextBox x:Name="textConsole" HorizontalAlignment="Left" Height="120" Margin="10,378,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="419"/>
-        <Label x:Name="label" Content="Output Console" HorizontalAlignment="Left" Margin="10,347,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="label" Content="{StaticResource srName}" HorizontalAlignment="Left" Margin="10,347,0,0" VerticalAlignment="Top"/>
         <Button x:Name="button_LoadFiles" Content="Load Files" HorizontalAlignment="Left" Margin="354,43,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="0.972,2.708" Click="button_LoadFiles_Click"/>
         <Button x:Name="button_Calculate" Content="Calculate" HorizontalAlignment="Left" Margin="354,353,0,0" VerticalAlignment="Top" Width="75" Click="button_Calculate_Click"/>
         <Button x:Name="button" Content="Eject Images" HorizontalAlignment="Left" Margin="354,322,0,0" VerticalAlignment="Top" Width="75"/>

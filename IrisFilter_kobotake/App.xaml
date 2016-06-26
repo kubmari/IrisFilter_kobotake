@@ -4,6 +4,6 @@
              xmlns:local="clr-namespace:IrisFilter_kobotake"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <ResourceDictionary Source ="XAMLResource\R.xaml"   />
     </Application.Resources>
 </Application>
