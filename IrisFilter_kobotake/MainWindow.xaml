@@ -7,17 +7,17 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="600" Width="1024">
     <Grid Margin="0,0,0,0">
-        <Canvas HorizontalAlignment="Left" Height="410" Margin="455,10,0,0" VerticalAlignment="Top" Width="551"
+        <Canvas HorizontalAlignment="Left" Height="410" Margin="10,10,0,0" VerticalAlignment="Top" Width="551"
                 x:Name="maincanvas"
                 Drop="canvas_Drop"
                 AllowDrop="True"
                 Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
-            <Image x:Name="mainimage" HorizontalAlignment="Left" Height="311" VerticalAlignment="Top" Width="319" RenderTransformOrigin="0.495,0.485" Canvas.Left="10" Canvas.Top="10"/>
+            <Image x:Name="mainimage" HorizontalAlignment="Left" Height="390" VerticalAlignment="Top" Width="531" RenderTransformOrigin="0.495,0.485" Canvas.Left="10" Canvas.Top="10"/>
         </Canvas>
-        <TextBox x:Name="textConsole" HorizontalAlignment="Left" Height="86" Margin="455,473,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="551"/>
-        <Label x:Name="label" Content="{StaticResource srName}" HorizontalAlignment="Left" Margin="455,435,0,0" VerticalAlignment="Top" Height="38" RenderTransformOrigin="0.5,0.5" HorizontalContentAlignment="Left" Padding="0 5 5 5" Width="106"/>
-        <Button x:Name="button_LoadFiles" Content="{StaticResource srButtonLoadFiles}" HorizontalAlignment="Left" Margin="354,43,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="0.972,2.708" Click="button_LoadFiles_Click"/>
-        <Button x:Name="button_Calculate" Content="{StaticResource srButtonCalculate}" HorizontalAlignment="Left" Margin="354,353,0,0" VerticalAlignment="Top" Width="75" Click="button_Calculate_Click"/>
+        <TextBox x:Name="textConsole" HorizontalAlignment="Left" Height="86" Margin="10,463,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="551"/>
+        <Label x:Name="label" Content="{StaticResource srName}" HorizontalAlignment="Left" Margin="10,425,0,0" VerticalAlignment="Top" Height="38" RenderTransformOrigin="0.5,0.5" HorizontalContentAlignment="Left" Padding="0 5 5 5" Width="106"/>
+        <Button x:Name="button_LoadFiles" Content="{StaticResource srButtonLoadFiles}" HorizontalAlignment="Left" Margin="566,525,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="0.972,2.708" Click="button_LoadFiles_Click"/>
+        <Button x:Name="button_Calculate" Content="{StaticResource srButtonCalculate}" HorizontalAlignment="Left" Margin="932,525,0,0" VerticalAlignment="Top" Width="74" Click="button_Calculate_Click"/>
 
     </Grid>
 </Window>
