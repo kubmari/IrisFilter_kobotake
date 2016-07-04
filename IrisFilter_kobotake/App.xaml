@@ -1,0 +1,9 @@
+﻿<Application x:Class="IrisFilter_kobotake.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:IrisFilter_kobotake"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary Source ="XAMLResource\R.xaml"   />
+    </Application.Resources>
+</Application>
