@@ -56,6 +56,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="resultPreview.xaml.cs">
+      <DependentUpon>resultPreview.xaml</DependentUpon>
+    </Compile>
+    <Page Include="resultPreview.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="XAMLResource\R.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

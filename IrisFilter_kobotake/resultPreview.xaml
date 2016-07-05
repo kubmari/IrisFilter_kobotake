@@ -1,0 +1,13 @@
+﻿<Window x:Class="IrisFilter_kobotake.resultPreview"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:IrisFilter_kobotake"
+        mc:Ignorable="d"
+        Title="resultPreview" Height="622.5" Width="916.5">
+    <Grid Margin="0,0,2,-7">
+        <Image x:Name="mainimage" HorizontalAlignment="Left" Height="390" VerticalAlignment="Top" Width="531" RenderTransformOrigin="0.495,0.485" Canvas.Left="10" Canvas.Top="10"/>
+
+    </Grid>
+</Window>

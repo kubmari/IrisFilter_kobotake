@@ -74,7 +74,14 @@ namespace IrisFilter_kobotake
 
         private void button_Calculate_Click(object sender, RoutedEventArgs e)
         {
+            var newWindow = new resultPreview();
+            button_Calculate.IsEnabled = false;
+            newWindow.Show();
+        }
 
+        private void resultPreview_Closing(object sender, RoutedEventArgs e)
+        {
+            button_Calculate.IsEnabled = true;
         }
 
         //Loading names of files and triggering propertysetter
