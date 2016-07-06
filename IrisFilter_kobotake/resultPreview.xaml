@@ -5,7 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:IrisFilter_kobotake"
         mc:Ignorable="d"
-        Title="resultPreview" Height="622.5" Width="916.5">
+        Title="resultPreview" Height="622.5" Width="916.5"
+        Closing="resultPreview_Closing"
+        Loaded="resultPreview_Loaded">
     <Grid Margin="0,0,2,-7">
         <Image x:Name="mainimage" HorizontalAlignment="Left" Height="390" VerticalAlignment="Top" Width="531" RenderTransformOrigin="0.495,0.485" Canvas.Left="10" Canvas.Top="10"/>
 

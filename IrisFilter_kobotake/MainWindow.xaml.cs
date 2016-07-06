@@ -72,17 +72,21 @@ namespace IrisFilter_kobotake
 
         }
 
+        public Bitmap grayscaleImage;
         private void button_Calculate_Click(object sender, RoutedEventArgs e)
         {
-            var newWindow = new resultPreview();
-            button_Calculate.IsEnabled = false;
-            newWindow.Show();
-        }
+            resultPreview newWindow = new resultPreview();
+            newWindow.Owner = this;
+            disableCalculationButton();
 
-        private void resultPreview_Closing(object sender, RoutedEventArgs e)
-        {
-            button_Calculate.IsEnabled = true;
+            //Assuming single image case!
+            BitmapImage loadedImage = loadedImages[0];
+            grayscaleImage = Processing.im2GrayBitmap(loadedImage);
+            newWindow.Show();
+            
         }
+        
+       
 
         //Loading names of files and triggering propertysetter
         private void loadDataNames(string[] _fileNames)
@@ -119,5 +123,15 @@ namespace IrisFilter_kobotake
             return outputNames;
         }
 
+        public void enableCalculationButton()
+        {
+            button_Calculate.IsEnabled = true;
+
+        }
+        public void disableCalculationButton()
+        {
+            button_Calculate.IsEnabled = false;
+
+        }
     }
 }

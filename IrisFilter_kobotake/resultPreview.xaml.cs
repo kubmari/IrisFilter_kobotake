@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,9 +20,31 @@ namespace IrisFilter_kobotake
     /// </summary>
     public partial class resultPreview : Window
     {
+         static MainWindow parentWindow;
+
+        private Bitmap grayscaleImage;
+        
         public resultPreview()
         {
             InitializeComponent();
+
+        }
+        
+
+        private void resultPreview_Loaded(object sender, RoutedEventArgs e)
+        {
+            resultPreview.parentWindow = this.Owner as MainWindow;
+            grayscaleImage = parentWindow.grayscaleImage;
+            BitmapSource displayImage = Processing.Bitmap2BitmapSource(grayscaleImage);
+            //bitmap (grayscaleImage) to array of values
+            //Prewitt
+            //Back to bitmapsource
+            mainimage.Source = displayImage;
+        }
+
+        private void resultPreview_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            parentWindow.enableCalculationButton();
         }
     }
 }
