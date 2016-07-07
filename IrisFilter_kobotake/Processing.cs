@@ -14,23 +14,50 @@ namespace IrisFilter_kobotake
 {
     class Processing
     {
+
+        public static int[,] bitmapToArray(Bitmap input)
+        {
+         int[,] imageArray = new int[input.Width, input.Height];
+         for(int x=0; x< input.Width; x++)
+         {
+             for(int y=0; y< input.Height; y++)
+             {
+                 System.Drawing.Color tempPixel = input.GetPixel(x, y);
+                 imageArray[x, y] = tempPixel.R;
+
+             }
+         }
+
+            return imageArray;
+        }
+
+
+        public static Bitmap arrayToBitmap(int[,] input, int sizeX, int sizeY)
+        {
+            Bitmap imageBitmap = new Bitmap(sizeX, sizeY);
+
+            for (int x = 0; x < sizeX; x++)
+            {
+                for (int y = 0; y < sizeY; y++)
+                {
+                    System.Drawing.Color newCol = System.Drawing.Color.FromArgb(255, input[x, y], input[x, y], input[x, y]);
+                   
+                    imageBitmap.SetPixel(x,y,newCol);
+                    
+
+                }
+            }
+
+            return imageBitmap;
+        }
+
         public static Bitmap im2GrayBitmap(BitmapImage input)
         {
             Bitmap bitmapGrayImage = MakeGrayscale3(BitmapImage2Bitmap(input));
-           /* int[,] imageArray = new int[bitmapRGBImage.Width, bitmapRGBImage.Height];
-            for(int x=0; x<bitmapRGBImage.Width; x++)
-            {
-                for(int y=0; y<bitmapRGBImage.Height; y++)
-                {
-                    Color tempPixel = bitmapRGBImage.GetPixel(x, y);
-                    imageArray[x, y] = tempPixel.R;
-                    
-                }
-            }*/
+
             return bitmapGrayImage;
         }
 
-         
 
         //source http://stackoverflow.com/questions/2265910/convert-an-image-to-grayscale
         public static Bitmap MakeGrayscale3(Bitmap original)
@@ -70,9 +97,112 @@ namespace IrisFilter_kobotake
 
 
         //Prewitt gradient on 3x3 neighbourhood
-        public void prewitt3()
+        public static int[,] prewitt3(int[,] input, int sizeX, int sizeY)
         {
+            int[,] horizontalFilter =new int[3, 3] {    {  1,  1,  1 }, 
+                                                        {  0,  0,  0 }, 
+                                                        { -1, -1, -1 } };
 
+
+            int[,] verticalFilter = new int[3, 3] {     { -1, 0, 1 },
+                                                        { -1, 0, 1 },
+                                                        { -1, 0, 1 } };
+
+            int[,] outputImage = new int[sizeX, sizeY];
+
+            for(int x=0; x< sizeX; x++)
+            {
+                for(int y=0; y< sizeY; y++)
+                {
+                    outputImage[x, y] = 0;
+                }
+            }
+
+            for (int x=1; x< sizeX-1; x++)
+            {
+                for(int y=1; y< sizeY-1; y++)
+                {
+                    int resultHorizontalPixel = 0;
+                    for (int n=-1; n<=1; n++)
+                    {
+                        for(int m=-1; m<=1;m++)
+                        {
+                            resultHorizontalPixel = resultHorizontalPixel + (horizontalFilter[1+n, 1+m] * input[x+n, y+m]);
+                           
+                        }
+                    }
+                    outputImage[x, y] = resultHorizontalPixel;
+
+
+                }
+            }
+
+
+            //UWAGA ZAIMPLEMENTOWAC VERTICAL FILTER I DODAC DO OBLICZEN MAGNITUDY (teraz jest G=sqrt(Gx^2 + Gx^2) powinno byc G=sqrt(Gx^2 + Gy^2))
+            int[,] gradientMagnitude = new int[sizeX, sizeY];
+
+            for (int x = 0; x < sizeX; x++)
+            {
+                for (int y = 0; y < sizeY; y++)
+                {
+                    gradientMagnitude[x, y] = (int)(Math.Sqrt(Math.Pow((double)outputImage[x, y], 2) + Math.Pow((double)outputImage[x, y], 2)));
+                }
+            }
+            return gradientMagnitude;
+        }
+        //scales matrices with values between -255..255 to 0..255
+        public static int[,] scaleValuesTo255(int[,] inputMatrix, int sizeX, int sizeY)
+        {
+            int[,] outputMatrix = new int[sizeX, sizeY];
+            
+            int minVal = findMin(inputMatrix, sizeX, sizeY);
+            for (int i = 0; i < sizeX; i++)
+            {
+                for (int j = 0; j < sizeY; j++)
+                {
+                    outputMatrix[i, j] = inputMatrix[i, j] - minVal; //0..n  
+                }
+            }
+
+            int maxVal = findMax(outputMatrix, sizeX, sizeY);
+            for (int i=0; i< sizeX; i++)
+            {
+                for(int j=0; j< sizeY; j++)
+                {
+                    outputMatrix[i, j] = (outputMatrix[i, j]*255) / maxVal; //0-1 * 255 => 0-255 
+                }
+            }
+            return outputMatrix;
+        }
+
+        public static int findMax(int[,] inputMatrix, int sizeX, int sizeY)
+        {
+            int maxVal = int.MinValue;
+            for (int i = 0; i < sizeX; i++)
+            {
+                for (int j = 0; j < sizeY; j++)
+                {
+                    if (inputMatrix[i,j] > maxVal)
+                        maxVal = inputMatrix[i,j];
+
+                }
+            }
+            return maxVal;
+        }
+
+        public static int findMin(int[,] inputMatrix, int sizeX, int sizeY)
+        {
+            int minVal = int.MaxValue;
+            for (int i = 0; i < sizeX; i++)
+            {
+                for (int j = 0; j < sizeY; j++)
+                {
+                    if (inputMatrix[i, j] < minVal)
+                        minVal = inputMatrix[i, j];
+
+                }
+            }
+            return minVal;
         }
 
         //source http://stackoverflow.com/questions/6484357/converting-bitmapimage-to-bitmap-and-vice-versa

@@ -104,6 +104,10 @@ namespace IrisFilter_kobotake
             }
         }
 
+        public void appendOutputConsole(string text)
+        {
+            textConsole.AppendText(text);
+        }
         //Making sure you only put acceptedExtension on load array
         private string[] validateNames(string[] _fileNames)
         {

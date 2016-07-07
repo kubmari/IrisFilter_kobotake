@@ -36,10 +36,21 @@ namespace IrisFilter_kobotake
             resultPreview.parentWindow = this.Owner as MainWindow;
             grayscaleImage = parentWindow.grayscaleImage;
             BitmapSource displayImage = Processing.Bitmap2BitmapSource(grayscaleImage);
-            //bitmap (grayscaleImage) to array of values
-            //Prewitt
+            int[,] arrayImage = Processing.bitmapToArray(grayscaleImage);
+            parentWindow.appendOutputConsole("Image converted to grayscale array!\n");
+            //Prewitt and further processing
+            int[,] outputPrewitt = Processing.prewitt3(arrayImage, grayscaleImage.Width, grayscaleImage.Height);
+            parentWindow.appendOutputConsole("Prewitt Calculated\n");
             //Back to bitmapsource
-            mainimage.Source = displayImage;
+            int test = Processing.findMax(outputPrewitt, grayscaleImage.Width, grayscaleImage.Height);
+            Console.WriteLine("MAX VAL: " + test);
+            outputPrewitt = Processing.scaleValuesTo255(outputPrewitt, grayscaleImage.Width, grayscaleImage.Height);
+            Bitmap outputBitmap = Processing.arrayToBitmap(outputPrewitt, grayscaleImage.Width, grayscaleImage.Height);
+            
+            BitmapSource outputBitmapSource = Processing.Bitmap2BitmapSource(outputBitmap);
+            parentWindow.appendOutputConsole("BitmapSource ready\n");
+
+            mainimage.Source = outputBitmapSource;
         }
 
         private void resultPreview_Closing(object sender, System.ComponentModel.CancelEventArgs e)
