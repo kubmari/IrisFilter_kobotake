@@ -36,19 +36,27 @@ namespace IrisFilter_kobotake
             grayscaleImage = parentWindow.grayscaleImage;
 
             BitmapSource displayImage = Processing.Bitmap2BitmapSource(grayscaleImage);
-            int[,] arrayImage =Processing.lbitmapToArray(grayscaleImage);
+            double[,] arrayImage =Processing.bitmapToArray(grayscaleImage);
              
            
             parentWindow.appendOutputConsole("Image converted to grayscale array!\n");
-            
-            //Prewitt and further processing
-            int[,] outputPrewitt = Processing.prewitt3(arrayImage, grayscaleImage.Width, grayscaleImage.Height);
-            parentWindow.appendOutputConsole("Prewitt Calculated\n");
 
-            //delete later
-            outputPrewitt = arrayImage;
+            //Prewitt and further processing
+            Processing.ImageData imageData = new Processing.ImageData();
+            imageData.calculateImageData(arrayImage, grayscaleImage.Width, grayscaleImage.Height);
+            double[,] gradientOrientation = imageData.gradientOrientation;
+           
+            parentWindow.appendOutputConsole("Prewitt Calculated\n");
             //Back to bitmapsource
-            outputPrewitt = Processing.scaleValuesTo255(outputPrewitt, grayscaleImage.Width, grayscaleImage.Height);
+        /*    for(int i=0; i<grayscaleImage.Width; i++)
+            {
+                for(int j=0; j<grayscaleImage.Height; j++)
+                {
+                    Console.Write(gradientOrientation[i,j]+" ");
+                }
+                Console.WriteLine();
+            }*/
+            int[,] outputPrewitt = Processing.scaleAtanValuesTo255(imageData.gradientOrientation, grayscaleImage.Width, grayscaleImage.Height);
             Bitmap outputBitmap = Processing.arrayToBitmap(outputPrewitt, grayscaleImage.Width, grayscaleImage.Height);
             BitmapSource outputBitmapSource = Processing.Bitmap2BitmapSource(outputBitmap);
             parentWindow.appendOutputConsole("BitmapSource ready\n");

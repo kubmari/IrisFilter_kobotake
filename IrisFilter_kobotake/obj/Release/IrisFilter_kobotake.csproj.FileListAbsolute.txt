@@ -1,0 +1,17 @@
+C:\Users\meris\Documents\Visual Studio 2015\Projects\IrisFilter_kobotake\IrisFilter_kobotake\bin\Release\IrisFilter_kobotake.exe.config
+C:\Users\meris\Documents\Visual Studio 2015\Projects\IrisFilter_kobotake\IrisFilter_kobotake\bin\Release\IrisFilter_kobotake.exe
+C:\Users\meris\Documents\Visual Studio 2015\Projects\IrisFilter_kobotake\IrisFilter_kobotake\bin\Release\IrisFilter_kobotake.pdb
+C:\Users\meris\Documents\Visual Studio 2015\Projects\IrisFilter_kobotake\IrisFilter_kobotake\obj\Release\resultPreview.g.cs
+C:\Users\meris\Documents\Visual Studio 2015\Projects\IrisFilter_kobotake\IrisFilter_kobotake\obj\Release\MainWindow.g.cs
+C:\Users\meris\Documents\Visual Studio 2015\Projects\IrisFilter_kobotake\IrisFilter_kobotake\obj\Release\App.g.cs
+C:\Users\meris\Documents\Visual Studio 2015\Projects\IrisFilter_kobotake\IrisFilter_kobotake\obj\Release\IrisFilter_kobotake_MarkupCompile.cache
+C:\Users\meris\Documents\Visual Studio 2015\Projects\IrisFilter_kobotake\IrisFilter_kobotake\obj\Release\IrisFilter_kobotake_MarkupCompile.lref
+C:\Users\meris\Documents\Visual Studio 2015\Projects\IrisFilter_kobotake\IrisFilter_kobotake\obj\Release\App.baml
+C:\Users\meris\Documents\Visual Studio 2015\Projects\IrisFilter_kobotake\IrisFilter_kobotake\obj\Release\resultPreview.baml
+C:\Users\meris\Documents\Visual Studio 2015\Projects\IrisFilter_kobotake\IrisFilter_kobotake\obj\Release\XAMLResource\R.baml
+C:\Users\meris\Documents\Visual Studio 2015\Projects\IrisFilter_kobotake\IrisFilter_kobotake\obj\Release\MainWindow.baml
+C:\Users\meris\Documents\Visual Studio 2015\Projects\IrisFilter_kobotake\IrisFilter_kobotake\obj\Release\IrisFilter_kobotake.g.resources
+C:\Users\meris\Documents\Visual Studio 2015\Projects\IrisFilter_kobotake\IrisFilter_kobotake\obj\Release\IrisFilter_kobotake.Properties.Resources.resources
+C:\Users\meris\Documents\Visual Studio 2015\Projects\IrisFilter_kobotake\IrisFilter_kobotake\obj\Release\IrisFilter_kobotake.csproj.GenerateResource.Cache
+C:\Users\meris\Documents\Visual Studio 2015\Projects\IrisFilter_kobotake\IrisFilter_kobotake\obj\Release\IrisFilter_kobotake.exe
+C:\Users\meris\Documents\Visual Studio 2015\Projects\IrisFilter_kobotake\IrisFilter_kobotake\obj\Release\IrisFilter_kobotake.pdb

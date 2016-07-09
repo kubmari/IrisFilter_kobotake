@@ -14,90 +14,88 @@ namespace IrisFilter_kobotake
 {
     class Processing
     {
-       
-        public static int[,] bitmapToArray(Bitmap input)
+
+        public static double[,] bitmapToArray(Bitmap input)
         {
-            int[,] imageArray = new int[input.Width, input.Height];
-            for (int x = 0; x < input.Width; x++)
-            {
-                for (int y = 0; y < input.Height; y++)
-                {
-                    System.Drawing.Color tempPixel = input.GetPixel(x, y);
-                    imageArray[x, y] = tempPixel.R;
-
-                }
-            }
-
-            return imageArray;
-        }
-
-        public static int[,] lbitmapToArray(Bitmap input)
-        {
-            int[,] imageArray = new int[input.Width, input.Height];
+            double[,] imageArray = new double[input.Width, input.Height];
             Rectangle rect = new Rectangle(0, 0, input.Width, input.Height);
             System.Drawing.Imaging.BitmapData bmpData =
                 input.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadWrite, input.PixelFormat);
 
             IntPtr ptr = bmpData.Scan0;
-
             int bytes = Math.Abs(bmpData.Stride) * input.Height;
             byte[] rgbValues = new byte[bytes];
-
             System.Runtime.InteropServices.Marshal.Copy(ptr, rgbValues, 0, bytes);
 
-            for(int i=0; i<input.Width; i++)
+            for (int i = 0; i < input.Width; i++)
             {
-                for(int j=0; j<input.Height; j++)
+                for (int j = 0; j < input.Height; j++)
                 {
-                    int index = j + i * input.Width;
-                    Console.WriteLine("Image Array[" + i + "," + j + "] gets value from rgbValue[" +index + "]= " + rgbValues[index] + "\n");
-                    imageArray[i, j] = rgbValues[index];
+                    int index = i + j * input.Width;
+                    imageArray[i, j] = rgbValues[index * 4];
                 }
-            }
-
-            Console.WriteLine("RGB Vals:\n");
-
-            for (int i = 0; i < 8; i++)
-            {
-                for (int j = 0; j < 8; j++)
-                {
-                    Console.Write(rgbValues[j + i * input.Width] + " ");
-                }
-                Console.WriteLine("");
-            }
-
-
-            Console.WriteLine("Image Array:\n");
-
-                for(int i=0; i<8; i++)
-            {
-                for(int j=0; j<8; j++)
-                {
-                    Console.Write(imageArray[i, j]+" ");
-                }
-                Console.WriteLine("");
             }
             return imageArray;
+        }
+
+        // source http://stackoverflow.com/questions/13511661/create-bitmap-from-double-two-dimentional-array
+        public static unsafe Bitmap arrayToBitmap(int[,] input, int sizeX, int sizeY)
+        {
+            Bitmap imageBitmap = new Bitmap(sizeX, sizeY);
+            BitmapData bmpData = imageBitmap.LockBits(
+                new Rectangle(0, 0, sizeX, sizeY),
+                ImageLockMode.ReadWrite,
+                System.Drawing.Imaging.PixelFormat.Format32bppArgb
+            );
+
+
+
+            ColorARGB* ptr = (ColorARGB*)bmpData.Scan0;
+
+            for (int i = 0; i < sizeX; i++)
+            {
+                for (int j = 0; j < sizeY; j++)
+                {
+                    byte color = (byte)input[i, j];
+
+                    ColorARGB* position = ptr + i + j * sizeX;
+                    position->A = 255;
+                    position->R = color;
+                    position->G = color;
+                    position->B = color;
+                }
+            }
+            imageBitmap.UnlockBits(bmpData);
+            return imageBitmap;
 
         }
-      
-
-        public static Bitmap arrayToBitmap(int[,] input, int sizeX, int sizeY)
+        public struct ColorARGB
         {
-               Bitmap imageBitmap = new Bitmap(sizeX, sizeY);
+            public byte B;
+            public byte G;
+            public byte R;
+            public byte A;
 
-               for (int x = 0; x < sizeX; x++)
-               {
-                   for (int y = 0; y < sizeY; y++)
-                   {
-                       System.Drawing.Color newCol = System.Drawing.Color.FromArgb(255, input[x, y], input[x, y], input[x, y]);
+            public ColorARGB(System.Drawing.Color color)
+            {
+                A = color.A;
+                R = color.R;
+                G = color.G;
+                B = color.B;
+            }
 
-                       imageBitmap.SetPixel(x,y,newCol);
+            public ColorARGB(byte a, byte r, byte g, byte b)
+            {
+                A = a;
+                R = r;
+                G = g;
+                B = b;
+            }
 
-
-                   }
-               }
-            return imageBitmap;
+            public System.Drawing.Color ToColor()
+            {
+                return System.Drawing.Color.FromArgb(A, R, G, B);
+            }
         }
 
         public static Bitmap im2GrayBitmap(BitmapImage input)
@@ -145,98 +143,214 @@ namespace IrisFilter_kobotake
         }
 
 
-        public static int[,] parConv3(int[,] input, int[,] kernel, int sizeX, int sizeY)
+
+
+
+        public static class FilterKernels
         {
-            int[,] outputImage = new int[sizeX, sizeY];
+            public static double[,] filterHorizontal = new double[3, 3] {    {  1,  1,  1 },
+                                                                {  0,  0,  0 },
+                                                                { -1, -1, -1 }};
 
-            Parallel.For(1, sizeX - 1, x =>
-              {
-                  for(int y=1; y<sizeY-1; y++)
-                  {
-                      int resultPixel = 0;
-                      for (int n = -1; n <= 1; n++)
-                      {
-                          for (int m = -1; m <= 1; m++)
-                          {
-                              resultPixel = resultPixel + (kernel[1 + n, 1 + m] * input[x + n, y + m]);
 
-                          }
-                      }
-                      outputImage[x, y] = resultPixel;
-                  }
-              }
-              );
-
-            return outputImage;
-
+            public static double[,] filterVertical = new double[3, 3] {     { -1, 0, 1 },
+                                                               { -1, 0, 1 },
+                                                               { -1, 0, 1 }};
         }
 
-
-        public static int[,] parGradientMagnitude(int[,] horizontalGradient, int[,] verticalGradient, int sizeX, int sizeY)
+        public class ImageData
         {
-            int[,] outputGradientMagnitude = new int[sizeX, sizeY];
 
-            Parallel.For(0, sizeX, x =>
+            public double[,] imageData;
+            public int sizeX;
+            public int sizeY;
+            public double[,] gradientHorizontal;
+            public double[,] gradientVertical;
+            public double[,] gradientMagnitude;
+            public double[,] gradientOrientation;
+
+            //Main method used to populate fields with data
+            public void calculateImageData(double[,] _imageData, int _sizeX, int _sizeY)
             {
-                for (int y=0; y< sizeY; y++)
+                imageData = _imageData;
+                setSize(_sizeX, _sizeY);
+                generateGradients();
+            }
+
+            private void parGradientMagnitude()
+            {
+                this.gradientMagnitude = new double[sizeX, sizeY];
+                Parallel.For(0, sizeX, x =>
                 {
-                    outputGradientMagnitude[x, y] = (int)(Math.Sqrt(Math.Pow((double)horizontalGradient[x, y], 2) + Math.Pow((double)verticalGradient[x, y], 2)));
+                    for (int y = 0; y < sizeY; y++)
+                    {
+                        this.gradientMagnitude[x, y] = (Math.Sqrt(Math.Pow((double)this.gradientHorizontal[x, y], 2) + Math.Pow((double)this.gradientVertical[x, y], 2)));
+                    }
+                });
+
+            }
+
+            private void setSize(int _sizeX, int _sizeY)
+            {
+                sizeX = _sizeX;
+                sizeY = _sizeY;
+            }
+
+            private void generateGradients()
+            {
+                calculateGradients();
+                parGradientMagnitude();
+                calculateOrientation();
+            }
+
+            private void calculateOrientation()
+            {
+                gradientOrientation = new double[sizeX, sizeY];
+                for (int i = 0; i < sizeX; i++)
+                {
+                    for (int j = 0; j < sizeY; j++)
+                    {
+                        /*   if (gradientVertical[i, j] == 0)
+                           {
+                               gradientVertical[i, j] = 0.001;
+                           }
+                              gradientOrientation[i, j] = Math.Atan(gradientHorizontal[i, j] / gradientVertical[i, j]);
+                              */
+                        /*     if (gradientHorizontal[i, j] == 0)
+                             {
+                                 gradientHorizontal[i, j] = 0.001;
+                             }
+                             gradientOrientation[i, j] = Math.Atan(gradientVertical[i, j] / gradientHorizontal[i, j]);
+                             */
+                        gradientOrientation[i, j] = Math.Atan2(gradientVertical[i,j], gradientHorizontal[i,j]);
+
+
+                    }
                 }
-            });
+            }
 
-            return outputGradientMagnitude;
+            private void calculateGradients()
+            {
+                Parallel.Invoke(() =>
+                {
+                    gradientHorizontal = new double[sizeX, sizeY];
+                    gradientHorizontal = parConv3(FilterKernels.filterHorizontal);
+                },
+                () =>
+                {
+                    gradientVertical = new double[sizeX, sizeY];
+                    gradientVertical = parConv3(FilterKernels.filterVertical);
+                });
+            }
+
+            public double[,] parConv3(double[,] kernel)
+            {
+                double[,] outputImage = new double[sizeX, sizeY];
+
+                Parallel.For(1, sizeX - 1, x =>
+                {
+                    for (int y = 1; y < sizeY - 1; y++)
+                    {
+                        double resultPixel = 0;
+                        for (int n = -1; n <= 1; n++)
+                        {
+                            for (int m = -1; m <= 1; m++)
+                            {
+                                resultPixel = resultPixel + (kernel[1 + n, 1 + m] * imageData[x + n, y + m]);
+
+                            }
+                        }
+                        outputImage[x, y] = resultPixel;
+                    }
+                }
+                  );
+
+                return outputImage;
+
+
+            }
         }
 
-        //Prewitt gradient on 3x3 neighbourhood
-        public static int[,] prewitt3(int[,] input, int sizeX, int sizeY)
-        {
-            int[,] horizontalFilter =new int[3, 3] {    {  1,  1,  1 }, 
-                                                        {  0,  0,  0 }, 
-                                                        { -1, -1, -1 } };
 
 
-            int[,] verticalFilter = new int[3, 3] {     { -1, 0, 1 },
-                                                        { -1, 0, 1 },
-                                                        { -1, 0, 1 } };
+    
 
-            int[,] horizontalGradient = new int[sizeX, sizeY];
-            int[,] verticalGradient = new int[sizeX, sizeY];
-            int[,] outputGradientMagnitude = new int[sizeX, sizeY];
-            Parallel.Invoke(() =>
-            {
-                horizontalGradient = parConv3(input, horizontalFilter, sizeX, sizeY);
-            },
-            ()=>
-            {
-                verticalGradient = parConv3(input, verticalFilter, sizeX, sizeY);
-            });
-   
-            outputGradientMagnitude = parGradientMagnitude(horizontalGradient, verticalGradient, sizeX, sizeY);
-            return outputGradientMagnitude;
-        }
-
-        //scales matrices with values between -255..255 to 0..255
-        public static int[,] scaleValuesTo255(int[,] inputMatrix, int sizeX, int sizeY)
+        public static int[,] scaleValuesTo255(double[,] inputMatrix, int sizeX, int sizeY)
         {
             int[,] outputMatrix = new int[sizeX, sizeY];
 
-            int minVal = inputMatrix.Cast<int>().Min();
+            double minVal = inputMatrix.Cast<double>().Min();
             for (int i = 0; i < sizeX; i++)
             {
                 for (int j = 0; j < sizeY; j++)
                 {
-                    outputMatrix[i, j] = inputMatrix[i, j] - minVal; //0..n  
+                    inputMatrix[i,j] = inputMatrix[i, j] - minVal; //0..n  
                 }
             }
 
-            int maxVal = inputMatrix.Cast<int>().Max();
-            for (int i=0; i< sizeX; i++)
+            double maxVal = inputMatrix.Cast<double>().Max();
+            for (int i = 0; i < sizeX; i++)
             {
-                for(int j=0; j< sizeY; j++)
+                for (int j = 0; j < sizeY; j++)
                 {
-                    outputMatrix[i, j] = (outputMatrix[i, j]*255) / maxVal; //0-1 * 255 => 0-255 
+                    inputMatrix[i,j] = ((inputMatrix[i, j] * 255.0) / maxVal); //0-1 * 255 => 0-255 
+                    outputMatrix[i, j] = (int)inputMatrix[i, j];
                 }
             }
+            return outputMatrix;
+        }
+        //Doesnt always scale to 0-255. Actual range can be smaller (eg. 10-200) but always within 0-255
+        public static int[,] softScaleValuesTo255(double[,] inputMatrix, int sizeX, int sizeY)
+        {
+            int[,] outputMatrix = new int[sizeX, sizeY];
+            
+            double minVal = inputMatrix.Cast<double>().Min();
+                for (int i = 0; i < sizeX; i++)
+            {
+                for (int j = 0; j < sizeY; j++)
+                {
+                    inputMatrix[i, j] = inputMatrix[i, j] - minVal; //0..n  
+                }
+            }
+
+            double maxVal = inputMatrix.Cast<double>().Max();
+            for (int i = 0; i < sizeX; i++)
+            {
+                for (int j = 0; j < sizeY; j++)
+                {
+                    inputMatrix[i, j] = (inputMatrix[i, j]*255/2.0); //0-1 * 255 => 0-255 
+                    outputMatrix[i, j] = (int)inputMatrix[i, j];
+                }
+            }
+            return outputMatrix;
+        }
+
+        public static int[,] scaleAtanValuesTo255(double[,] inputMatrix, int sizeX, int sizeY)
+        {
+            int[,] outputMatrix = new int[sizeX, sizeY];
+
+            double minVal = inputMatrix.Cast<double>().Min();
+            for (int i = 0; i < sizeX; i++)
+            {
+                for (int j = 0; j < sizeY; j++)
+                {
+                    inputMatrix[i, j] = inputMatrix[i, j] + Math.PI ; //0..2n  
+                }
+            }
+
+            double maxVal = inputMatrix.Cast<double>().Max();
+            for (int i = 0; i < sizeX; i++)
+            {
+                for (int j = 0; j < sizeY; j++)
+                {
+                    inputMatrix[i, j] = (inputMatrix[i, j] / Math.PI); //0-2pi => 0-1 
+                    inputMatrix[i, j] = (inputMatrix[i, j] / 2);
+                    inputMatrix[i, j] = (inputMatrix[i, j] *255);
+          
+                    outputMatrix[i, j] = (int)inputMatrix[i, j];
+                }
+            }
+            
             return outputMatrix;
         }
 

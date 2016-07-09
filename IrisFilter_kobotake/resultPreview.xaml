@@ -9,7 +9,7 @@
         Closing="resultPreview_Closing"
         Loaded="resultPreview_Loaded">
     <Grid Margin="0,0,2,-7">
-        <Image x:Name="mainimage" HorizontalAlignment="Left" Height="390" VerticalAlignment="Top" Width="531" RenderTransformOrigin="0.495,0.485" Canvas.Left="10" Canvas.Top="10"/>
+        <Image x:Name="mainimage" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="0.495,0.485" Canvas.Left="10" Canvas.Top="10"/>
 
     </Grid>
 </Window>
