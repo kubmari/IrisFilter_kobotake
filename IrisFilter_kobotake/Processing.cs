@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -149,13 +150,125 @@ namespace IrisFilter_kobotake
         public static class FilterKernels
         {
             public static double[,] filterHorizontal = new double[3, 3] {    {  1,  1,  1 },
-                                                                {  0,  0,  0 },
-                                                                { -1, -1, -1 }};
+                                                                             {  0,  0,  0 },
+                                                                             { -1, -1, -1 }};
 
 
             public static double[,] filterVertical = new double[3, 3] {     { -1, 0, 1 },
-                                                               { -1, 0, 1 },
-                                                               { -1, 0, 1 }};
+                                                                            { -1, 0, 1 },
+                                                                            { -1, 0, 1 }};
+        }
+
+        public class CovergenceImageFilter
+        {
+            public int sizeX;
+            public int sizeY;
+            public double[,] gradientHorizontal;
+            public double[,] gradientVertical;
+            public double[,] coverganceFilterImage;
+            int lineAmount;
+            int lineRange;
+
+            public CovergenceImageFilter() { }
+            public CovergenceImageFilter(double[,] _gradientHorizontal, double[,] _gradientVertical, int _lineAmount, int _lineRange, int _sizeX, int _sizeY)
+            {
+                lineAmount = _lineAmount;
+                lineRange = _lineRange;
+                gradientHorizontal = _gradientHorizontal;
+                gradientVertical = _gradientVertical;
+                
+                sizeX = _sizeX;
+                sizeY = _sizeY;
+
+            }
+            public void setCovergenceFilterData(double[,] _gradientHorizontal, double[,] _gradientVertical, int _lineAmount, int _lineRange, int _sizeX, int _sizeY)
+            {
+                lineAmount = _lineAmount;
+                lineRange = _lineRange;
+                gradientHorizontal = _gradientHorizontal;
+                gradientVertical = _gradientVertical;
+                sizeX = _sizeX;
+                sizeY = _sizeY;
+            }
+
+            private double calculateCovergenceIndexOnPixel(int pixelX, int pixelY)
+            {
+                double covergenceSum = 0;
+                int amountOfPixelsInRange = 0;
+                for (int n = 0; n < lineAmount; n++)
+                {
+                    for (int r = 1; r < lineRange; r++)
+                    {
+                        double endX = pixelX + r * Math.Sin((2 * Math.PI * n) / lineAmount);
+                        double endY = pixelY + r * Math.Cos((2 * Math.PI * n) / lineAmount);
+                        double angle = 0;
+
+                            angle = calculateAngleBetweenInterestAndPixel(pixelX, pixelY, (int)endX, (int)endY);
+                            amountOfPixelsInRange++;
+
+                        covergenceSum = covergenceSum + (calculateCovergenceIndex(angle));
+                    }
+
+                }
+                double covergenceIndexAverage = covergenceSum / amountOfPixelsInRange;
+
+                return covergenceIndexAverage;
+
+            }
+
+            public void calculateCovergenceIndexFilter()
+            {
+                double[,] outputImage = new double[sizeX, sizeY];
+                for (int i = 0; i < sizeX; i++)
+                {
+                    for (int j = 0; j < sizeY; j++)
+                    {
+                        outputImage[i, j] = calculateCovergenceIndexOnPixel(i, j);
+                        if (outputImage[i, j] < 0)
+                            outputImage[i, j] = 0;
+                    }
+                }
+                coverganceFilterImage = outputImage;
+            }
+
+            private double calculateCovergenceIndex(double angle)
+            {
+                     return Math.Cos(angle);
+
+            }
+
+            private Vector getVectorBetweenPoints(int point1X, int point1Y, int point2X, int point2Y)
+            {
+                Vector outputVector = new Vector(point2X - point1X, point2Y - point1Y);
+                return outputVector;
+            }
+            public double convertToRadians(double angle)
+            {
+                return (Math.PI / 180) * angle;
+            }
+            private double calculateAngleBetweenInterestAndPixel(int interestPointX, int interestPointY, int checkedPixelX, int checkedPixelY)
+            {
+  
+                if (checkedPixelX >= 0 && checkedPixelY >= 0 && checkedPixelX < sizeX && checkedPixelY < sizeY)
+                {
+                    /*         Vector vectorBetweenInterestAndPixel = getVectorBetweenPoints(interestPointX, interestPointY, checkedPixelX, checkedPixelY);
+                             Vector vectorBetweenPixelAndGradient = new Vector(gradientVertical[checkedPixelX, checkedPixelY], gradientHorizontal[checkedPixelX, checkedPixelY]);
+                             double angleBetweenInterestAndPixel = Vector.AngleBetween(vectorBetweenInterestAndPixel, vectorBetweenPixelAndGradient);
+                             return angleBetweenInterestAndPixel;*/
+                    Vector vectorBetweenInterestAndPixel = getVectorBetweenPoints(interestPointX, interestPointY, checkedPixelX, checkedPixelY);
+                    Vector vectorBetweenPixelAndGradient = new Vector(gradientVertical[checkedPixelX, checkedPixelY], gradientHorizontal[checkedPixelX, checkedPixelY]);
+                    double angleBetweenInterestAndPixel = Vector.AngleBetween(vectorBetweenInterestAndPixel, vectorBetweenPixelAndGradient);
+                    angleBetweenInterestAndPixel = convertToRadians(angleBetweenInterestAndPixel);
+      
+                    return angleBetweenInterestAndPixel;
+                } else
+                {
+                  //  Console.WriteLine("Wynik: " + 0);
+                    return 0.0;
+
+                }
+            }
+   
         }
 
         public class ImageData
@@ -169,6 +282,8 @@ namespace IrisFilter_kobotake
             public double[,] gradientMagnitude;
             public double[,] gradientOrientation;
 
+         
+
             //Main method used to populate fields with data
             public void calculateImageData(double[,] _imageData, int _sizeX, int _sizeY)
             {
@@ -176,7 +291,7 @@ namespace IrisFilter_kobotake
                 setSize(_sizeX, _sizeY);
                 generateGradients();
             }
-
+           
             private void parGradientMagnitude()
             {
                 this.gradientMagnitude = new double[sizeX, sizeY];
@@ -210,18 +325,6 @@ namespace IrisFilter_kobotake
                 {
                     for (int j = 0; j < sizeY; j++)
                     {
-                        /*   if (gradientVertical[i, j] == 0)
-                           {
-                               gradientVertical[i, j] = 0.001;
-                           }
-                              gradientOrientation[i, j] = Math.Atan(gradientHorizontal[i, j] / gradientVertical[i, j]);
-                              */
-                        /*     if (gradientHorizontal[i, j] == 0)
-                             {
-                                 gradientHorizontal[i, j] = 0.001;
-                             }
-                             gradientOrientation[i, j] = Math.Atan(gradientVertical[i, j] / gradientHorizontal[i, j]);
-                             */
                         gradientOrientation[i, j] = Math.Atan2(gradientVertical[i,j], gradientHorizontal[i,j]);
 
 
@@ -293,7 +396,22 @@ namespace IrisFilter_kobotake
             {
                 for (int j = 0; j < sizeY; j++)
                 {
-                    inputMatrix[i,j] = ((inputMatrix[i, j] * 255.0) / maxVal); //0-1 * 255 => 0-255 
+                    inputMatrix[i,j] = ((inputMatrix[i, j]) / maxVal); //0-1
+                    inputMatrix[i, j] *= 255.0;
+                    outputMatrix[i, j] = (int)inputMatrix[i, j];
+                }
+            }
+            return outputMatrix;
+        }
+        public static int[,] scaleIrisValuesTo255(double[,] inputMatrix, int sizeX, int sizeY)
+        {
+            int[,] outputMatrix = new int[sizeX, sizeY];
+         
+            for (int i = 0; i < sizeX; i++)
+            {
+                for (int j = 0; j < sizeY; j++)
+                {
+                    inputMatrix[i, j] *= 255;
                     outputMatrix[i, j] = (int)inputMatrix[i, j];
                 }
             }
@@ -324,7 +442,7 @@ namespace IrisFilter_kobotake
             }
             return outputMatrix;
         }
-
+        //Scales from -pi..pi to 0-255
         public static int[,] scaleAtanValuesTo255(double[,] inputMatrix, int sizeX, int sizeY)
         {
             int[,] outputMatrix = new int[sizeX, sizeY];

@@ -34,13 +34,13 @@ namespace IrisFilter_kobotake
         {
             resultPreview.parentWindow = this.Owner as MainWindow;
             grayscaleImage = parentWindow.grayscaleImage;
-
             BitmapSource displayImage = Processing.Bitmap2BitmapSource(grayscaleImage);
             double[,] arrayImage =Processing.bitmapToArray(grayscaleImage);
              
            
             parentWindow.appendOutputConsole("Image converted to grayscale array!\n");
-
+            //test
+           
             //Prewitt and further processing
             Processing.ImageData imageData = new Processing.ImageData();
             imageData.calculateImageData(arrayImage, grayscaleImage.Width, grayscaleImage.Height);
@@ -48,15 +48,20 @@ namespace IrisFilter_kobotake
            
             parentWindow.appendOutputConsole("Prewitt Calculated\n");
             //Back to bitmapsource
-        /*    for(int i=0; i<grayscaleImage.Width; i++)
-            {
-                for(int j=0; j<grayscaleImage.Height; j++)
+            /*    for(int i=0; i<grayscaleImage.Width; i++)
                 {
-                    Console.Write(gradientOrientation[i,j]+" ");
-                }
-                Console.WriteLine();
-            }*/
-            int[,] outputPrewitt = Processing.scaleAtanValuesTo255(imageData.gradientOrientation, grayscaleImage.Width, grayscaleImage.Height);
+                    for(int j=0; j<grayscaleImage.Height; j++)
+                    {
+                        Console.Write(gradientOrientation[i,j]+" ");
+                    }
+                    Console.WriteLine();
+                }*/
+            Processing.CovergenceImageFilter covergenceFilter = new Processing.CovergenceImageFilter(imageData.gradientHorizontal, imageData.gradientVertical,16,2, grayscaleImage.Width, grayscaleImage.Height);
+            covergenceFilter.calculateCovergenceIndexFilter();
+
+            //int[,] outputPrewitt = Processing.scaleAtanValuesTo255(imageData.gradientOrientation, grayscaleImage.Width, grayscaleImage.Height);
+            double[,] test = covergenceFilter.coverganceFilterImage;
+            int[,] outputPrewitt = Processing.scaleValuesTo255(test, grayscaleImage.Width, grayscaleImage.Height);
             Bitmap outputBitmap = Processing.arrayToBitmap(outputPrewitt, grayscaleImage.Width, grayscaleImage.Height);
             BitmapSource outputBitmapSource = Processing.Bitmap2BitmapSource(outputBitmap);
             parentWindow.appendOutputConsole("BitmapSource ready\n");
