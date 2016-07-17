@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 
 namespace IrisFilter_kobotake
 {
-    class Processing
+    public class Processing
     {
 
         public static double[,] bitmapToArray(Bitmap input)
@@ -49,10 +49,7 @@ namespace IrisFilter_kobotake
                 System.Drawing.Imaging.PixelFormat.Format32bppArgb
             );
 
-
-
             ColorARGB* ptr = (ColorARGB*)bmpData.Scan0;
-
             for (int i = 0; i < sizeX; i++)
             {
                 for (int j = 0; j < sizeY; j++)
@@ -145,8 +142,6 @@ namespace IrisFilter_kobotake
 
 
 
-
-
         public static class FilterKernels
         {
             public static double[,] filterHorizontal = new double[3, 3] {    {  1,  1,  1 },
@@ -175,8 +170,7 @@ namespace IrisFilter_kobotake
                 lineAmount = _lineAmount;
                 lineRange = _lineRange;
                 gradientHorizontal = _gradientHorizontal;
-                gradientVertical = _gradientVertical;
-                
+                gradientVertical = _gradientVertical;              
                 sizeX = _sizeX;
                 sizeY = _sizeY;
 
@@ -203,17 +197,29 @@ namespace IrisFilter_kobotake
                         double endY = pixelY + r * Math.Cos((2 * Math.PI * n) / lineAmount);
                         double angle = 0;
 
-                            angle = calculateAngleBetweenInterestAndPixel(pixelX, pixelY, (int)endX, (int)endY);
+                        if (endX >= 0 && endY >= 0 && endX < sizeX && endY < sizeY)
+                        {
+                            angle = calculateAngleBetweenInterestAndPixel(pixelX, pixelY, (int)endX, (int)endY, gradientVertical[(int)endX, (int)endY], gradientHorizontal[(int)endX, (int)endY]);
+                            if (Double.IsNaN(angle))
+                            {
+                                covergenceSum = covergenceSum + Math.Cos(Math.PI);
+                                amountOfPixelsInRange++;                               
+                            }
+                            else
+                            {
+                                amountOfPixelsInRange++;
+                                covergenceSum = covergenceSum + Math.Cos(angle);//(calculateCovergenceIndex(angle, pixelX, pixelY));
+                            }
+                        }
+                        else
+                        {
                             amountOfPixelsInRange++;
-
-                        covergenceSum = covergenceSum + (calculateCovergenceIndex(angle));
+                            covergenceSum = covergenceSum + 0;
+                        }                    
                     }
-
                 }
                 double covergenceIndexAverage = covergenceSum / amountOfPixelsInRange;
-
                 return covergenceIndexAverage;
-
             }
 
             public void calculateCovergenceIndexFilter()
@@ -224,20 +230,14 @@ namespace IrisFilter_kobotake
                     for (int j = 0; j < sizeY; j++)
                     {
                         outputImage[i, j] = calculateCovergenceIndexOnPixel(i, j);
-                        if (outputImage[i, j] < 0)
-                            outputImage[i, j] = 0;
+                        if (gradientHorizontal[i, j] == 0 && gradientVertical[i, j] == 0)
+                            outputImage[i, j] = -1;
                     }
                 }
                 coverganceFilterImage = outputImage;
             }
 
-            private double calculateCovergenceIndex(double angle)
-            {
-                     return Math.Cos(angle);
-
-            }
-
-            private Vector getVectorBetweenPoints(int point1X, int point1Y, int point2X, int point2Y)
+            public Vector getVectorBetweenPoints(int point1X, int point1Y, int point2X, int point2Y)
             {
                 Vector outputVector = new Vector(point2X - point1X, point2Y - point1Y);
                 return outputVector;
@@ -246,34 +246,36 @@ namespace IrisFilter_kobotake
             {
                 return (Math.PI / 180) * angle;
             }
-            private double calculateAngleBetweenInterestAndPixel(int interestPointX, int interestPointY, int checkedPixelX, int checkedPixelY)
-            {
-  
-                if (checkedPixelX >= 0 && checkedPixelY >= 0 && checkedPixelX < sizeX && checkedPixelY < sizeY)
-                {
-                    /*         Vector vectorBetweenInterestAndPixel = getVectorBetweenPoints(interestPointX, interestPointY, checkedPixelX, checkedPixelY);
-                             Vector vectorBetweenPixelAndGradient = new Vector(gradientVertical[checkedPixelX, checkedPixelY], gradientHorizontal[checkedPixelX, checkedPixelY]);
-                             double angleBetweenInterestAndPixel = Vector.AngleBetween(vectorBetweenInterestAndPixel, vectorBetweenPixelAndGradient);
-                             return angleBetweenInterestAndPixel;*/
-                    Vector vectorBetweenInterestAndPixel = getVectorBetweenPoints(interestPointX, interestPointY, checkedPixelX, checkedPixelY);
-                    Vector vectorBetweenPixelAndGradient = new Vector(gradientVertical[checkedPixelX, checkedPixelY], gradientHorizontal[checkedPixelX, checkedPixelY]);
-                    double angleBetweenInterestAndPixel = Vector.AngleBetween(vectorBetweenInterestAndPixel, vectorBetweenPixelAndGradient);
-                    angleBetweenInterestAndPixel = convertToRadians(angleBetweenInterestAndPixel);
-      
-                    return angleBetweenInterestAndPixel;
-                } else
-                {
-                  //  Console.WriteLine("Wynik: " + 0);
-                    return 0.0;
 
-                }
+
+            public double calcAngleTwoVectors(Vector vec1, Vector vec2)
+            {
+                return Vector.AngleBetween(vec1, vec2);
+            }
+
+
+            public double angleBetween(Vector u, Vector v)
+            {
+                double toppart = u.X * v.X + u.Y * v.Y;
+                double u2 = u.X * u.X + u.Y * u.Y;
+                double v2 = v.X * v.X + v.Y * v.Y;
+                double bottompart = Math.Sqrt(u2 * v2);
+                double result = Math.Acos(toppart / bottompart);
+                return result;
+            }
+
+            public double calculateAngleBetweenInterestAndPixel(int interestPointX, int interestPointY, int checkedPixelX, int checkedPixelY, double verticalGradient, double horizontalGradient)
+            {
+                Vector vectorBetweenInterestAndPixel = getVectorBetweenPoints(interestPointX, interestPointY, checkedPixelX, checkedPixelY);           
+                Vector vectorBetweenPixelAndGradient = new Vector(gradientVertical[checkedPixelX, checkedPixelY], gradientHorizontal[checkedPixelX, checkedPixelY]);
+                double angleBetweenInterestAndPixel = angleBetween(vectorBetweenInterestAndPixel, vectorBetweenPixelAndGradient);
+                return angleBetweenInterestAndPixel;                                 
             }
    
         }
 
         public class ImageData
         {
-
             public double[,] imageData;
             public int sizeX;
             public int sizeY;
@@ -281,8 +283,6 @@ namespace IrisFilter_kobotake
             public double[,] gradientVertical;
             public double[,] gradientMagnitude;
             public double[,] gradientOrientation;
-
-         
 
             //Main method used to populate fields with data
             public void calculateImageData(double[,] _imageData, int _sizeX, int _sizeY)
@@ -375,13 +375,39 @@ namespace IrisFilter_kobotake
         }
 
 
+        public static int[,] converToInt(double[,] inputMatrix, int sizeX, int sizeY)
+        {
+            int[,] outputMatrix = new int[sizeX, sizeY];
 
-    
+            double minVal = (double)inputMatrix.Cast<double>().Min();
+            double maxVal = (double)inputMatrix.Cast<double>().Max();
+            Console.WriteLine("Early Min Value: " + minVal + " Max Value: " + maxVal);
+
+            for (int i = 0; i < sizeX; i++)
+            {
+                for (int j = 0; j < sizeY; j++)
+                {
+
+                    outputMatrix[i, j] = (int)(inputMatrix[i, j]*255);
+                }
+            }
+            minVal = (double)outputMatrix.Cast<int>().Min();
+            maxVal = (double)outputMatrix.Cast<int>().Max();
+            Console.WriteLine("Min Value: " + minVal + " Max Value: " + maxVal);
+            return outputMatrix;
+        }
+
 
         public static int[,] scaleValuesTo255(double[,] inputMatrix, int sizeX, int sizeY)
         {
             int[,] outputMatrix = new int[sizeX, sizeY];
-
+            for (int i = 0; i < sizeX; i++)
+            {
+                for (int j = 0; j < sizeY; j++)
+                {
+                    inputMatrix[i, j] = (inputMatrix[i, j]);//0..n  
+                }
+            }
             double minVal = inputMatrix.Cast<double>().Min();
             for (int i = 0; i < sizeX; i++)
             {
@@ -403,45 +429,8 @@ namespace IrisFilter_kobotake
             }
             return outputMatrix;
         }
-        public static int[,] scaleIrisValuesTo255(double[,] inputMatrix, int sizeX, int sizeY)
-        {
-            int[,] outputMatrix = new int[sizeX, sizeY];
-         
-            for (int i = 0; i < sizeX; i++)
-            {
-                for (int j = 0; j < sizeY; j++)
-                {
-                    inputMatrix[i, j] *= 255;
-                    outputMatrix[i, j] = (int)inputMatrix[i, j];
-                }
-            }
-            return outputMatrix;
-        }
-        //Doesnt always scale to 0-255. Actual range can be smaller (eg. 10-200) but always within 0-255
-        public static int[,] softScaleValuesTo255(double[,] inputMatrix, int sizeX, int sizeY)
-        {
-            int[,] outputMatrix = new int[sizeX, sizeY];
-            
-            double minVal = inputMatrix.Cast<double>().Min();
-                for (int i = 0; i < sizeX; i++)
-            {
-                for (int j = 0; j < sizeY; j++)
-                {
-                    inputMatrix[i, j] = inputMatrix[i, j] - minVal; //0..n  
-                }
-            }
-
-            double maxVal = inputMatrix.Cast<double>().Max();
-            for (int i = 0; i < sizeX; i++)
-            {
-                for (int j = 0; j < sizeY; j++)
-                {
-                    inputMatrix[i, j] = (inputMatrix[i, j]*255/2.0); //0-1 * 255 => 0-255 
-                    outputMatrix[i, j] = (int)inputMatrix[i, j];
-                }
-            }
-            return outputMatrix;
-        }
+     
+  
         //Scales from -pi..pi to 0-255
         public static int[,] scaleAtanValuesTo255(double[,] inputMatrix, int sizeX, int sizeY)
         {

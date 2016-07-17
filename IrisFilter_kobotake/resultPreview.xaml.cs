@@ -47,21 +47,18 @@ namespace IrisFilter_kobotake
             double[,] gradientOrientation = imageData.gradientOrientation;
            
             parentWindow.appendOutputConsole("Prewitt Calculated\n");
-            //Back to bitmapsource
-            /*    for(int i=0; i<grayscaleImage.Width; i++)
-                {
-                    for(int j=0; j<grayscaleImage.Height; j++)
-                    {
-                        Console.Write(gradientOrientation[i,j]+" ");
-                    }
-                    Console.WriteLine();
-                }*/
-            Processing.CovergenceImageFilter covergenceFilter = new Processing.CovergenceImageFilter(imageData.gradientHorizontal, imageData.gradientVertical,16,2, grayscaleImage.Width, grayscaleImage.Height);
+
+            Processing.CovergenceImageFilter covergenceFilter = new Processing.CovergenceImageFilter(imageData.gradientHorizontal, imageData.gradientVertical,32,48, grayscaleImage.Width, grayscaleImage.Height);
             covergenceFilter.calculateCovergenceIndexFilter();
 
-            //int[,] outputPrewitt = Processing.scaleAtanValuesTo255(imageData.gradientOrientation, grayscaleImage.Width, grayscaleImage.Height);
+       
             double[,] test = covergenceFilter.coverganceFilterImage;
-            int[,] outputPrewitt = Processing.scaleValuesTo255(test, grayscaleImage.Width, grayscaleImage.Height);
+             int[,] outputPrewitt = Processing.scaleValuesTo255(test, grayscaleImage.Width, grayscaleImage.Height);
+          //  int[,] outputPrewitt = Processing.converToInt(test, grayscaleImage.Width, grayscaleImage.Height);
+
+
+
+
             Bitmap outputBitmap = Processing.arrayToBitmap(outputPrewitt, grayscaleImage.Width, grayscaleImage.Height);
             BitmapSource outputBitmapSource = Processing.Bitmap2BitmapSource(outputBitmap);
             parentWindow.appendOutputConsole("BitmapSource ready\n");

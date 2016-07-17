@@ -32,3 +32,5 @@ C:\Users\meris\Documents\Visual Studio 2015\Projects\IrisFilter_kobotake\IrisFil
 C:\Users\meris\Documents\Visual Studio 2015\Projects\IrisFilter_kobotake\IrisFilter_kobotake\obj\Debug\IrisFilter_kobotake.g.resources
 C:\Users\meris\Documents\Visual Studio 2015\Projects\IrisFilter_kobotake\IrisFilter_kobotake\obj\Debug\IrisFilter_kobotake.Properties.Resources.resources
 C:\Users\meris\Documents\Visual Studio 2015\Projects\IrisFilter_kobotake\IrisFilter_kobotake\obj\Debug\IrisFilter_kobotake.csproj.GenerateResource.Cache
+C:\Users\Mariusz\Documents\Visual Studio 2015\Projects\IrisFilter_kobotake\IrisFilter_kobotake\obj\Debug\resultPreview.g.cs
+C:\Users\Mariusz\Documents\Visual Studio 2015\Projects\IrisFilter_kobotake\IrisFilter_kobotake\obj\Debug\resultPreview.baml
