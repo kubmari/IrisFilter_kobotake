@@ -185,12 +185,31 @@ namespace IrisFilter_kobotake
                 sizeY = _sizeY;
             }
 
+
+            private double new_calculateCovergenceIndexOnPixel(int pixelX, int pixelY)
+            {
+                for(int r=0; r<lineAmount; r++)
+                {
+                    double[] covIndices = new double[lineRange];
+                    for(int n=0; n<lineRange; n++)
+                    {
+                        double endX = pixelX + r * Math.Sin((2 * Math.PI * n) / lineAmount);
+                        double endY = pixelY + r * Math.Cos((2 * Math.PI * n) / lineAmount);
+                        double angle = 0;
+                    }
+                }
+            }
             private double calculateCovergenceIndexOnPixel(int pixelX, int pixelY)
             {
                 double covergenceSum = 0;
-                int amountOfPixelsInRange = 0;
+
+                double covergenceIndicesSum = 0;
+
                 for (int n = 0; n < lineAmount; n++)
                 {
+                    double maxCovInd = -100;
+                    int amountOfPixelsInRange = 0;
+
                     for (int r = 1; r < lineRange; r++)
                     {
                         double endX = pixelX + r * Math.Sin((2 * Math.PI * n) / lineAmount);
@@ -202,8 +221,8 @@ namespace IrisFilter_kobotake
                             angle = calculateAngleBetweenInterestAndPixel(pixelX, pixelY, (int)endX, (int)endY, gradientVertical[(int)endX, (int)endY], gradientHorizontal[(int)endX, (int)endY]);
                             if (Double.IsNaN(angle))
                             {
-                                covergenceSum = covergenceSum + Math.Cos(Math.PI);
-                                amountOfPixelsInRange++;                               
+                         //       covergenceSum = covergenceSum + 0;// Math.Cos(Math.PI);
+                      //          amountOfPixelsInRange++;                               
                             }
                             else
                             {
@@ -213,13 +232,22 @@ namespace IrisFilter_kobotake
                         }
                         else
                         {
-                            amountOfPixelsInRange++;
-                            covergenceSum = covergenceSum + 0;
-                        }                    
+                      //      amountOfPixelsInRange++;
+                    //        covergenceSum = covergenceSum + 0;
+                        } 
+
+                        double tempCovInd = covergenceSum / amountOfPixelsInRange;
+
+                        if (maxCovInd < tempCovInd)
+                            maxCovInd = tempCovInd;
+
                     }
+                    covergenceIndicesSum += maxCovInd;
+
                 }
-                double covergenceIndexAverage = covergenceSum / amountOfPixelsInRange;
-                return covergenceIndexAverage;
+              
+
+                return  covergenceIndicesSum/lineAmount;
             }
 
             public void calculateCovergenceIndexFilter()
@@ -231,7 +259,7 @@ namespace IrisFilter_kobotake
                     {
                         outputImage[i, j] = calculateCovergenceIndexOnPixel(i, j);
                         if (gradientHorizontal[i, j] == 0 && gradientVertical[i, j] == 0)
-                            outputImage[i, j] = -1;
+                            outputImage[i, j] = 0;
                     }
                 }
                 coverganceFilterImage = outputImage;
@@ -326,8 +354,6 @@ namespace IrisFilter_kobotake
                     for (int j = 0; j < sizeY; j++)
                     {
                         gradientOrientation[i, j] = Math.Atan2(gradientVertical[i,j], gradientHorizontal[i,j]);
-
-
                     }
                 }
             }
@@ -401,14 +427,11 @@ namespace IrisFilter_kobotake
         public static int[,] scaleValuesTo255(double[,] inputMatrix, int sizeX, int sizeY)
         {
             int[,] outputMatrix = new int[sizeX, sizeY];
-            for (int i = 0; i < sizeX; i++)
-            {
-                for (int j = 0; j < sizeY; j++)
-                {
-                    inputMatrix[i, j] = (inputMatrix[i, j]);//0..n  
-                }
-            }
+
             double minVal = inputMatrix.Cast<double>().Min();
+            double maxVal = inputMatrix.Cast<double>().Max();
+
+            Console.WriteLine("Min and Max vals before scaling: " + minVal + ", " + maxVal);
             for (int i = 0; i < sizeX; i++)
             {
                 for (int j = 0; j < sizeY; j++)
@@ -417,7 +440,7 @@ namespace IrisFilter_kobotake
                 }
             }
 
-            double maxVal = inputMatrix.Cast<double>().Max();
+           maxVal = inputMatrix.Cast<double>().Max();
             for (int i = 0; i < sizeX; i++)
             {
                 for (int j = 0; j < sizeY; j++)
